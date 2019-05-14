@@ -1,6 +1,6 @@
 import random
 
-dominio = [1, 31]
+dominio = [-10, 10]
 
 tamcrom = int(input("Insira o tamanho do cromossomo: "))
 tampop = int(input("Insira o tamanho da população: "))
@@ -73,7 +73,8 @@ def AvaliarPop(populacao):
     candidatos = []
 
     for i in range(len(populacao)):
-        apt = (Normalizar(populacao[i])) ** 2
+        x = Normalizar(populacao[i])
+        apt = ((x)**2) -(3*x) + 4
         candidatos.append([populacao[i], apt])
     return candidatos
 def Normalizar(cromo):

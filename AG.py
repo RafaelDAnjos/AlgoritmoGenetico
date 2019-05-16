@@ -1,30 +1,53 @@
 import random
+import matplotlib.pyplot as plt
 
-dominio = [-10, 10]
+limSup = int(input("Insira o limite Superior do domínio: "))
+limInf = int(input("Insira o limite Inferior do domínio: "))
 
 tamcrom = int(input("Insira o tamanho do cromossomo: "))
 tampop = int(input("Insira o tamanho da população: "))
+numGeracoes = int(input("Insira o numero de gerações: "))
+dominio = [limInf, limSup]
 def main():
     populacao = []
     avaliados = []
     selecionados = []
     geracao = []
+    MatrizResultado = []
 
 
     GerarPopulacao(populacao)
-    print("população: ", populacao)
-    for i in range(5):
+
+    for i in range(numGeracoes):
         avaliados = AvaliarPop(populacao)
-        print("avaliados",avaliados)
-        selecionados = Selecionarmelhores(avaliados, tampop)
-        geracao = Crossover(selecionados)
-        geracao = AvaliarPop(geracao)
-        geracao = Selecionarmelhores(geracao, tampop)
-        populacao = Mutacao(geracao)
-    print("população final: ", populacao)
+
+        selecionados = Torneio(avaliados, tampop)
+
+        taxamut =0.6
+        if(random.uniform(0,1)<=taxamut):
+            selecionados = Crossover(selecionados)
+        populacao = Mutacao(selecionados)
+
+        MatrizResultado.append(populacao)
+
+    Imprimegraf(MatrizResultado)
+
+
 
     return 0
 
+def Imprimegraf(matriz):
+
+
+    for i in range(len(matriz[0])):
+        lista = []
+        for j in range(len(matriz)):
+           lista.append(Normalizar(matriz[j][i]))
+
+
+
+        plt.plot(lista)
+        plt.show()
 
 def converterd_b(n):
     binario = ""
@@ -64,7 +87,7 @@ def GerarPopulacao(populacao):
 
             bit = bit + str(random.randrange(0,2))
         populacao.append(bit)
-    print("CARALHO:",populacao)
+
 
     return 0
 
@@ -74,7 +97,9 @@ def AvaliarPop(populacao):
 
     for i in range(len(populacao)):
         x = Normalizar(populacao[i])
-        apt = ((x)**2) -(3*x) + 4
+        print("X: ",x)
+        apt = x**2 -3*x + 4
+        print("Apt: ",apt)
         candidatos.append([populacao[i], apt])
     return candidatos
 def Normalizar(cromo):
@@ -98,24 +123,23 @@ def Selecionarmelhores(avaliados, tampop):
                 if (prob > avaliados[j - 1][2] and prob <= avaliados[j][2]):
                     selecionados.append(avaliados[j][0])
     return selecionados
+def Torneio(avaliados,tampop):
+    selecionados = []
 
+    while len(selecionados)<tampop:
+        prob1= random.randrange(0,len(avaliados)-1)
+        prob2= random.randrange(0,len(avaliados)-1)
+        if(avaliados[prob1][1]<avaliados[prob2][1]):
+            selecionados.append(avaliados[prob1][0])
+        else:
+            selecionados.append(avaliados[prob2][0])
+    return selecionados
 
 def Crossover(selecionados):
-    taxacross = 0.6
-    pais = []
+
     filhos = []
 
-    for i in range(len(selecionados)):
-        prob = random.uniform(0, 1)
-
-        if prob <= taxacross:
-            pais.append(selecionados[i])
-        else:
-            filhos.append(selecionados[i])
-
-    if len(pais) == 1:
-        filhos.append(pais[0])
-    for j in range(len(pais) - 1):
+    for j in range(0,len(selecionados),2):
 
         filho1 = ""
         filho2 = ""
@@ -123,15 +147,15 @@ def Crossover(selecionados):
         caudaf2 = ""
         cabecaf1 = ""
         cabecaf2 = ""
-        numcross = random.randrange(1, len(pais[j]))
+        numcross = random.randrange(1, len(selecionados[j]))
 
-        for k in range(len(pais[j])):
+        for k in range(len(selecionados[j])):
             if k < numcross:
-                cabecaf1 = cabecaf1 + pais[j][k]
-                cabecaf2 = cabecaf2 + pais[j + 1][k]
+                cabecaf1 = cabecaf1 + selecionados[j][k]
+                cabecaf2 = cabecaf2 + selecionados[j + 1][k]
             else:
-                caudaf1 = caudaf1 + pais[j][k]
-                caudaf2 = caudaf2 + pais[j + 1][k]
+                caudaf1 = caudaf1 + selecionados[j][k]
+                caudaf2 = caudaf2 + selecionados[j + 1][k]
 
         filho1 = cabecaf1 + caudaf2
         filhos.append(filho1)
@@ -167,3 +191,4 @@ def Somatoriofx(avaliados):
 
 
 main()
+

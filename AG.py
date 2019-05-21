@@ -18,7 +18,7 @@ def main():
 
     GerarPopulacao(populacao)
 
-    for i in range(numGeracoes):
+	for i in range(numGeracoes):
         avaliados = AvaliarPop(populacao)
 
         selecionados = Torneio(avaliados, tampop)
@@ -37,17 +37,19 @@ def main():
     return 0
 
 def Imprimegraf(matriz):
+	
+
+    for i in range(len(matriz)):
+		melhor = matriz[i][0]
+		for j in range(len(matriz[0])):
+			if melhor>matriz[i][j]:
+				melhor = matriz[i][j]
+		lista.append(Normalizar(melhor))
 
 
-    for i in range(len(matriz[0])):
-        lista = []
-        for j in range(len(matriz)):
-           lista.append(Normalizar(matriz[j][i]))
 
-
-
-        plt.plot(lista)
-        plt.show()
+    plt.plot(lista)
+    plt.show()
 
 def converterd_b(n):
     binario = ""
@@ -191,4 +193,3 @@ def Somatoriofx(avaliados):
 
 
 main()
-

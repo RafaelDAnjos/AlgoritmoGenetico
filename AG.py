@@ -18,7 +18,7 @@ def main():
 
     GerarPopulacao(populacao)
 
-	for i in range(numGeracoes):
+    for i in range(numGeracoes):
         avaliados = AvaliarPop(populacao)
 
         selecionados = Torneio(avaliados, tampop)
@@ -27,24 +27,26 @@ def main():
         if(random.uniform(0,1)<=taxamut):
             selecionados = Crossover(selecionados)
         populacao = Mutacao(selecionados)
-
-        MatrizResultado.append(populacao)
+        avaliados = AvaliarPop(populacao)
+        MatrizResultado.append(avaliados)
 
     Imprimegraf(MatrizResultado)
+    print(MatrizResultado)
 
 
 
     return 0
 
 def Imprimegraf(matriz):
-	
+    lista = []
 
     for i in range(len(matriz)):
-		melhor = matriz[i][0]
-		for j in range(len(matriz[0])):
-			if melhor>matriz[i][j]:
-				melhor = matriz[i][j]
-		lista.append(Normalizar(melhor))
+        melhor = matriz[i][0]
+        for j in range(len(matriz[0])):
+            if melhor[1]>matriz[i][j][1]:
+                melhor = matriz[i][j]
+        lista.append(Normalizar(melhor[0]))
+    print(lista)        
 
 
 
